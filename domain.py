@@ -90,8 +90,8 @@ CONSTRUCT {
 
         # Don't forget to change rdf:about for static files
         # Use uniqid for result.xml or archive it
-        result.serialize(os.path.dirname(__file__) + "/templates/result.xml")
-        with open(os.path.dirname(__file__) + "/templates/result.xml", 'r') as file:
+        result.serialize(os.path.dirname(__file__) + "/result.xml")
+        with open(os.path.dirname(__file__) + "/result.xml", 'r') as file:
             template = render_template_string(file.read())
         response = make_response(template)
         response.headers['Content-Type'] = 'application/xml'
