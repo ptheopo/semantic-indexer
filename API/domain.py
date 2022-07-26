@@ -28,9 +28,8 @@ def getDirectory(filename):
 def home():
     return render_template('home.html')
 
-@app.route('/<copy>', defaults={'copy': None})
-@app.route('/filename/<filename>/<copy>')
-def onefile(filename, copy):
+@app.route('/filename/<filename>')
+def onefile(filename):
 
     req = """
 PREFIX System: <http://ns.exiftool.org/File/System/1.0/>
@@ -91,10 +90,6 @@ CONSTRUCT {
     result.graph.namespace_manager.bind('IPTC', "http://ns.exiftool.org/IPTC/IPTC/1.0/", override=True, replace=True)
     result.graph.namespace_manager.bind('XMP', "http://ns.exiftool.org/XMP/XMP/2.0/", override=True, replace=True)
 
-    # Need to change rdf:about before using it and copy files if no option "archive"
-    # if copy != None and copy.lower() == "copy" and not os.path.isfile(os.path.dirname(__file__) + '/static/' + filename):
-        # shutil.copyfile(getDirectory(filename) + '/' + filename, os.path.dirname(__file__) + '/static/' + filename)
-        
     result.serialize(os.path.dirname(__file__) + "/result.json", format="json-ld")
     with open(os.path.dirname(__file__) + "/result.json", 'r') as file:
         template = render_template_string(file.read())
