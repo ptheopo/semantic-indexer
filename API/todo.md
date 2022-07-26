@@ -1,0 +1,2 @@
+- Automatic hotfolder directory creation
+- Verify if hotfolder active..

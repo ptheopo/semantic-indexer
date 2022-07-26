@@ -1,9 +1,11 @@
 from flask import Flask, render_template, make_response, render_template_string
+from flask_cors import CORS
 from rdflib import *
 import shutil
 import os
 
 app = Flask(__name__)
+CORS(app)
 graph = ConjunctiveGraph(store="BerkeleyDB")
 graph.open('/tmp/store', create=False)
 
@@ -26,8 +28,9 @@ def getDirectory(filename):
 def home():
     return render_template('home.html')
 
-@app.route('/filename/<filename>')
-def onefile(filename):
+@app.route('/<copy>', defaults={'copy': None})
+@app.route('/filename/<filename>/<copy>')
+def onefile(filename, copy):
 
     req = """
 PREFIX System: <http://ns.exiftool.org/File/System/1.0/>
@@ -89,14 +92,14 @@ CONSTRUCT {
     result.graph.namespace_manager.bind('XMP', "http://ns.exiftool.org/XMP/XMP/2.0/", override=True, replace=True)
 
     # Need to change rdf:about before using it and copy files if no option "archive"
-    #if not os.path.isfile(os.path.dirname(__file__) + '/static/' + filename):
-        #shutil.copyfile(getDirectory(filename) + '/' + filename, os.path.dirname(__file__) + '/static/' + filename)
+    # if copy != None and copy.lower() == "copy" and not os.path.isfile(os.path.dirname(__file__) + '/static/' + filename):
+        # shutil.copyfile(getDirectory(filename) + '/' + filename, os.path.dirname(__file__) + '/static/' + filename)
         
-    result.serialize(os.path.dirname(__file__) + "/result.xml", format="xml")
-    with open(os.path.dirname(__file__) + "/result.xml", 'r') as file:
+    result.serialize(os.path.dirname(__file__) + "/result.json", format="json-ld")
+    with open(os.path.dirname(__file__) + "/result.json", 'r') as file:
         template = render_template_string(file.read())
     response = make_response(template)
-    response.headers['Content-Type'] = 'application/xml'
+    response.headers['Content-Type'] = 'application/ld+json'
     return response
 
 @app.route('/files')
@@ -161,17 +164,13 @@ CONSTRUCT {
     result.graph.namespace_manager.bind('XMP', "http://ns.exiftool.org/XMP/XMP/2.0/", override=True, replace=True)
     result.graph.namespace_manager.bind('XMP-dc', "http://ns.exiftool.org/XMP/XMP-dc/1.0/", override=True, replace=True)
 
-    # Need to change rdf:about before using it and copy files if no option "archive"
-    #if not os.path.isfile(os.path.dirname(__file__) + '/static/' + filename):
-        #shutil.copyfile(getDirectory(filename) + '/' + filename, os.path.dirname(__file__) + '/static/' + filename)
-
     # Don't forget to change rdf:about for static files
     # Use uniqid for result.xml or archive it
-    result.serialize(os.path.dirname(__file__) + "/result.xml", format="xml")
-    with open(os.path.dirname(__file__) + "/result.xml", 'r') as file:
+    result.serialize(os.path.dirname(__file__) + "/result.json", format="json-ld")
+    with open(os.path.dirname(__file__) + "/result.json", 'r') as file:
         template = render_template_string(file.read())
     response = make_response(template)
-    response.headers['Content-Type'] = 'application/xml'
+    response.headers['Content-Type'] = 'application/ld+json'
     return response
 
 @app.errorhandler(404)

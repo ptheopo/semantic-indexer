@@ -1,4 +1,6 @@
 import time
+import shutil
+import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from rdflib import Graph
@@ -27,11 +29,12 @@ class RDFStore:
 
 class HotfolderWatcher:
 
-    def __init__(self, directory, period):
+    def __init__(self, directory, period, staticPath):
         self.observer = Observer()
         self.rdfStore = RDFStore("/tmp/store")
         self.directory = directory
         self.period = period
+        self.staticPath = staticPath
 
     def sync(self, paths, items):
         
@@ -46,6 +49,13 @@ class HotfolderWatcher:
         exit_code = process.wait()
         print("[SYNC] Synchronize " + self.directory +  " hotfolder")
         self.rdfStore.graph.parse(data=output.decode("utf-8"), format="xml")
+
+        # Copy files in static directory
+        for file in createdPaths:
+            filename = os.path.basename(file) 
+            if not os.path.isfile(self.staticPath + filename):
+                shutil.copyfile(file, self.staticPath + filename)
+
 
     def run(self):
 
@@ -101,5 +111,6 @@ class HotfolderHandler(FileSystemEventHandler):
 # MAIN #
 ########
 
-watch = HotfolderWatcher("/tmp/hotfolder", 5)
+# Don't forget '/' for the static path
+watch = HotfolderWatcher("/tmp/hotfolder", 5, os.path.dirname(__file__) + "/static/")
 watch.run()
