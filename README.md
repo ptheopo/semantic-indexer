@@ -11,10 +11,10 @@ Semantic indexer using Exiftool / RDFLib / Python3 / BerkeleyDB from an hotfolde
 - Start it `python3 hotfolderWatcher.py`, where you want
 - Start client, type `python3 domain.py`
 - Insert new medias in your hotfolder
-- Go to [127.0.0.1:5000](http://127.0.0.1:5000/) for viewing API web client
+- Go to [127.0.0.1:5000](http://127.0.0.1:5000/) for checking API
 - Install web app client in APP, type `cd APP && npm install`
 - Run web app, `node app.js`
-- Go to [127.0.0.1:8081](http://127.0.0.1:8081/)
+- Go to [127.0.0.1:8081](http://127.0.0.1:8081/) for viewing web app
 
 ## Current POC requests
 
