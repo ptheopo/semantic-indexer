@@ -10,7 +10,7 @@ services:
       context: docker
       dockerfile: domain.dockerfile
     ports:
-      - "5000:5000"
+      - "5000:${DOMAIN_PORT}"
 
   hotfolderwatcher:
 
@@ -19,8 +19,6 @@ services:
     build:
       context: docker
       dockerfile: hotfolderwatcher.dockerfile
-    ports:
-      - "8081:8081"
 
   app:
 
@@ -30,8 +28,4 @@ services:
       context: docker
       dockerfile: app.dockerfile
     ports:
-      - "8001:8001"
-
-volumes:
-  
-  git-volume:
+      - "8001:${APP_PORT}"

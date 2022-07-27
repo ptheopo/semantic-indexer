@@ -16,4 +16,4 @@ RUN git clone https://github.com/theophpo/semantic-indexer.git
 
 RUN cd semantic-indexer/APP && npm install
 
-ENTRYPOINT node semantic-indexer/APP/app.js
+CMD cd semantic-indexer/APP && node app.js

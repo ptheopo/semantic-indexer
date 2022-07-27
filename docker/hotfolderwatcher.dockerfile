@@ -22,4 +22,4 @@ RUN pip install watchdog
 
 RUN git clone https://github.com/theophpo/semantic-indexer.git
 
-ENTRYPOINT python semantic-indexer/API/hotfolderWatcher.py
+CMD cd semantic-indexer/API && python hotfolderWatcher.py
