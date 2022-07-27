@@ -1,0 +1,7 @@
+body {
+  background-color: #000000;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.container-fluid { margin: 0px; padding: 0px; }
+.navbar-brand { margin-left: 20px; }
