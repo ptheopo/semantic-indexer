@@ -19,6 +19,8 @@ services:
     build:
       context: docker
       dockerfile: hotfolderwatcher.dockerfile
+    volumes:
+      - ${HOTFOLDER_PATH}:${HOTFOLDER_PATH}
 
   app:
 
