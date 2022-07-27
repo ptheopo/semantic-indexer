@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+
+  domain:
+
+    image: domain:1.0
+    container_name: domain
+    build:
+      context: docker
+      dockerfile: domain.dockerfile
+    ports:
+      - "5000:5000"
+
+  hotfolderwatcher:
+
+    image: hotfolderwatcher:1.0
+    container_name: hotfolderwatcher
+    build:
+      context: docker
+      dockerfile: hotfolderwatcher.dockerfile
+    ports:
+      - "8081:8081"
+
+  app:
+
+    image: app:1.0
+    container_name: app
+    build:
+      context: docker
+      dockerfile: app.dockerfile
+    ports:
+      - "8001:8001"
+
+volumes:
+  
+  git-volume:
