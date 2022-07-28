@@ -16,14 +16,14 @@
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 
 	</head>
-	<body>
+	<body style="background-color: #000000;">
 
 		<div id="app">
 
 			<div class="container-fluid">
 
 				<!-- NAV !-->
-				<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 
 				  <a class="navbar-brand" href="#">Semantic Indexer</a>
 				  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,10 +34,27 @@
 				      <li class="nav-item active">
 					      <a class="nav-link" href="#"><strong>All files</strong></a>
 				      </li>
+							<li class="nav-item active">
+					      <a class="nav-link" href="/search">Search</a>
+				      </li>
 				    </ul>
+						<form class="form-inline my-2 my-lg-0" id="searchNav">
+							<input type="search" placeholder="Keywords">
+							<button href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+							</svg></button>
+				    </form>
 				  </div>
 
 				</nav>
+
+				<div class="container-fluid" style="padding-left: 20px;">
+				  <ol class="breadcrumb">
+				    <li v-for="folder in currentPath" class="breadcrumb-item"><a href="#">
+							{{ folder }}
+						</a></li>
+				  </ol>
+				</div>
 
 				<!-- File to file !-->
 				<div v-for="file in files" >
@@ -84,13 +101,17 @@
 			el: '#app',
 			data () {
 				return {
-					files: null
+					files: null,
+					currentPath: []
 				}
 			},
 			mounted () {
 				axios
 				.get('http://127.0.0.1:5000/files')
 				.then(response => (this.files = response.data))
+				axios
+				.get('http://127.0.0.1:5000/currentPath')
+				.then(response => (this.currentPath = response.data))
 			}
 		}).mount('#app')
 

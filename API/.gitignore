@@ -162,3 +162,5 @@ cython_debug/
 static/
 result.xml
 result.json
+
+hotfolder.db

@@ -1,7 +1,7 @@
-from flask import Flask, render_template, make_response, render_template_string
-from flask import request
+from flask import Flask, render_template, make_response, render_template_string, request, jsonify
 from flask_cors import CORS
 from rdflib import *
+import sqlite3
 import urllib.parse
 import shutil
 import os
@@ -56,11 +56,11 @@ PREFIX IPTC: <http://ns.exiftool.org/IPTC/IPTC/1.0/>
 PREFIX XMP: <http://ns.exiftool.org/XMP/XMP/1.0/>
 
 CONSTRUCT {
-    
+
     ?subj ?pred ?obj
 
 } WHERE {
-    
+
     ?subj ?pred ?obj .
 
     ?subj System:FileName \"%s\" .
@@ -99,6 +99,23 @@ CONSTRUCT {
     response.headers['Content-Type'] = 'application/ld+json'
     return response
 
+@app.route('/currentPath')
+def currentPath():
+
+    configDB = sqlite3.connect('hotfolder.db')
+    cur = configDB.cursor()
+    cur.execute("SELECT value FROM config WHERE option='hotfolderPath'");
+    hotfolderPath = cur.fetchone()[0]
+    print(hotfolderPath)
+    configDB.close()
+
+    result = hotfolderPath.split('/')
+    if result[0] == '':
+        result[0] = '/'
+
+    return jsonify(result)
+
+
 @app.route('/files')
 def files():
 
@@ -126,11 +143,11 @@ PREFIX XMP: <http://ns.exiftool.org/XMP/XMP/1.0/>
 PREFIX XMP-dc: <http://ns.exiftool.org/XMP/XMP-dc/1.0/>
 
 CONSTRUCT {
-    
+
     ?subj ?pred ?obj
 
 } WHERE {
-    
+
     ?subj ?pred ?obj .
 
 }
@@ -198,14 +215,15 @@ PREFIX IPTC: <http://ns.exiftool.org/IPTC/IPTC/1.0/>
 PREFIX XMP: <http://ns.exiftool.org/XMP/XMP/1.0/>
 
 CONSTRUCT {
-    
+
     ?subj ?pred ?obj
 
 } WHERE {
-    
+
     ?subj ?pred ?obj .
 
-    ?subj System:Directory \"%s\" .
+    ?subj System:Directory ?directory .
+    FILTER strStarts(?directory, \"%s\") .
 
 }
     """ % (directory)

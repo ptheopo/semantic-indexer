@@ -16,14 +16,14 @@
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 
 	</head>
-	<body>
+	<body style="background-color: #000000;">
 
 		<div id="app">
 
 			<div class="container-fluid">
 
 				<!-- NAV !-->
-				<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 
 				  <a class="navbar-brand" href="#">Semantic Indexer</a>
 				  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,10 +34,27 @@
 				      <li class="nav-item active">
 				        <a class="nav-link" href="/">All files</a>
 				      </li>
+							<li class="nav-item active">
+					      <a class="nav-link" href="/search">Search</a>
+				      </li>
 				    </ul>
+						<form class="form-inline my-2 my-lg-0" id="searchNav">
+							<input type="search" placeholder="Keywords">
+							<button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+							</svg></button>
+				    </form>
 				  </div>
 
 				</nav>
+
+				<div class="container-fluid" style="padding-left: 20px;">
+				  <ol class="breadcrumb">
+				    <li v-for="folderI in currentPath.length" class="breadcrumb-item"><a :href="'/directory?path=' + breadcrumb(folderI)">
+							{{ currentPath[folderI - 1] }}
+						</a></li>
+				  </ol>
+				</div>
 
 				<!-- File to file !-->
 				<div v-for="file in files" >
@@ -80,19 +97,40 @@
 		/* Obtain _path_ params from URL */
 		const { createApp } = Vue;
 		const urlParams = new URLSearchParams(window.location.search);
-		const path = encodeURIComponent(urlParams.get('path'));
+		const pathParam = urlParams.get('path');
+		const pathSplit = pathParam.split("/")
+		const path = encodeURIComponent(pathParam);
+
+		if (pathSplit[0] == '')
+			pathSplit[0] = '/'
 
 		createApp({
 			el: '#app',
 			data () {
 				return {
-					files: null
+					files: null,
+					currentPath: []
+				}
+			},
+			methods: {
+				breadcrumb(folderI) {
+					console.log(this.currentPath)
+					let pathTmp = this.currentPath;
+
+					pathTmp = pathTmp.slice(0, folderI);
+					if (pathTmp[0] == '')
+						pathTmp[0] = '/'
+					let result = pathTmp.join('/').replace('//', '/')
+					return (encodeURIComponent(result));
 				}
 			},
 			mounted () {
 				axios
 				.get('http://127.0.0.1:5000/directory?path=' + path)
 				.then(response => (this.files = response.data))
+				axios
+				.get('http://127.0.0.1:5000/currentPath')
+				.then(response => (this.currentPath = pathSplit))
 			}
 		}).mount('#app')
 

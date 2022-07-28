@@ -16,4 +16,8 @@ app.get('/directory', function(req, res) {
   res.sendFile(__dirname + '/directory.html');
 });
 
+app.get('/search', function(req, res) {
+  res.sendFile(__dirname + '/search.html');
+});
+
 app.listen(8001);

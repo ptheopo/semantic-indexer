@@ -1,5 +1,7 @@
 import time
+import re
 import shutil
+import sqlite3
 import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -35,9 +37,29 @@ class HotfolderWatcher:
         self.directory = directory
         self.period = period
         self.staticPath = staticPath
+        self.configDB = None
+        self.saveConfig()
+
+    def saveConfig(self):
+
+        # Create database
+        self.configDB = sqlite3.connect('hotfolder.db')
+
+        # Create SQLite config table
+        cur = self.configDB.cursor()
+        cur.execute("""CREATE TABLE IF NOT EXISTS `config` (
+            `option` VARCHAR(250),
+            `value` VARCHAR(250)
+        );""")
+
+        # Save hotfolder path
+        cur = self.configDB.cursor()
+        cur.execute("INSERT INTO config VALUES ('hotfolderPath', '" + self.directory.replace("'", "\\'") + "')")
+        self.configDB.commit()
+        self.configDB.close()
 
     def sync(self, paths, items):
-        
+
         createdPaths = []
         print("[SYNC] Exiftool get RDF output from :")
         for path in paths:
@@ -52,7 +74,7 @@ class HotfolderWatcher:
 
         # Copy files in static directory
         for file in createdPaths:
-            filename = os.path.basename(file) 
+            filename = os.path.basename(file)
             if not os.path.isfile(self.staticPath + filename):
                 shutil.copyfile(file, self.staticPath + filename)
 
