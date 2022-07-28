@@ -50,3 +50,22 @@ nav a:hover { text-decoration: none; }
 #searchNav button:hover {
   opacity: 0.95;
 }
+
+/* Go up button */
+
+#go-up-btn {
+  width: 100%;
+  padding: 20px;
+  background-color: #2ecc71;
+  text-align: center;
+  color: #FFFFFF;
+  display: block;
+}
+
+#go-up-btn svg {
+  width: 1%;
+}
+
+#go-up-btn:hover {
+  background-color: #27ae60;
+}
