@@ -6,10 +6,14 @@ Semantic indexer using Exiftool / RDFLib / Python3 / BerkeleyDB from an hotfolde
 
 ## Install
 
-- Install dependancies
-- Set your hotfolder path in _hotfolderWatcher.py_ or `mkdir /tmp/hotfolder` (default hotfolder) and set your hotfolder synchronization period (in HotfolderWatcher instanciation)
+- Install dependancies :
+  - `sudo apt-get update`
+  - `sudo apt-get install python3, npm, nodejs, pip3, libdb-dev`
+  - `python3 -m pip install --upgrade pip`
+  - `pip3 install rdflib watchdog flask flask-cors berkeleydb`
+- Set your hotfolder path in _hotfolderWatcher.py_ or `mkdir /tmp/hotfolder` (default hotfolder)
 - Create static directory, `mkdir API/static`
-- Start it `python3 API/hotfolderWatcher.py'
+- Start it `python3 API/hotfolderWatcher.py`
 - Start API, type `python3 API/api.py`
 - Insert new medias in your hotfolder
 - Go to [127.0.0.1:5000](http://127.0.0.1:5000/) for checking API
