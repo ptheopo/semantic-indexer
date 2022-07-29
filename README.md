@@ -8,11 +8,12 @@ Semantic indexer using Exiftool / RDFLib / Python3 / BerkeleyDB from an hotfolde
 
 - Install dependancies
 - Set your hotfolder path in _hotfolderWatcher.py_ or `mkdir /tmp/hotfolder` (default hotfolder) and set your hotfolder synchronization period (in HotfolderWatcher instanciation)
-- Start it `python3 hotfolderWatcher.py`, where you want
-- Start client, type `python3 domain.py`
+- Create static directory, `mkdir API/static`
+- Start it `python3 API/hotfolderWatcher.py`, where you want
+- Start API, type `python3 API/api.py`
 - Insert new medias in your hotfolder
 - Go to [127.0.0.1:5000](http://127.0.0.1:5000/) for checking API
-- Install web app client in APP, type `cd APP && npm install`
+- Install MVC client in APP, type `cd APP && npm install`
 - Run web app, `node app.js`
 - Go to [127.0.0.1:8001](http://127.0.0.1:8001/) for viewing web app
 
